@@ -157,7 +157,7 @@ export async function handleUsersApi(request, db, url, path, options) {
       if (password) { passwordHash = await hashPassword(password); }
       const user = await createUser(db, { username, passwordHash, role, mailboxLimit });
       return Response.json(user);
-    } catch (e) { return errorResponse('创建失败: ' + (e?.message || e), 500); }
+    } catch (e) { return errorResponse('创建失败', 500); }
   }
   
   if (!isMock && request.method === 'PATCH' && path.startsWith('/api/users/')) {
@@ -173,7 +173,7 @@ export async function handleUsersApi(request, db, url, path, options) {
       if (typeof body.password === 'string' && body.password) { fields.password_hash = await hashPassword(String(body.password)); }
       await updateUser(db, id, fields);
       return Response.json({ success: true });
-    } catch (e) { return errorResponse('更新失败: ' + (e?.message || e), 500); }
+    } catch (e) { return errorResponse('更新失败', 500); }
   }
   
   if (!isMock && request.method === 'DELETE' && path.startsWith('/api/users/')) {
@@ -181,7 +181,7 @@ export async function handleUsersApi(request, db, url, path, options) {
     const id = Number(path.split('/')[3]);
     if (!id) return errorResponse('无效ID', 400);
     try { await deleteUser(db, id); return Response.json({ success: true }); }
-    catch (e) { return errorResponse('删除失败: ' + (e?.message || e), 500); }
+    catch (e) { return errorResponse('删除失败', 500); }
   }
   
   if (!isMock && path === '/api/users/assign' && request.method === 'POST') {
@@ -193,7 +193,7 @@ export async function handleUsersApi(request, db, url, path, options) {
       if (!username || !address) return errorResponse('参数不完整', 400);
       const result = await assignMailboxToUser(db, { username, address });
       return Response.json(result);
-    } catch (e) { return errorResponse('分配失败: ' + (e?.message || e), 500); }
+    } catch (e) { return errorResponse('分配失败', 500); }
   }
   
   if (!isMock && path === '/api/users/unassign' && request.method === 'POST') {
@@ -205,7 +205,7 @@ export async function handleUsersApi(request, db, url, path, options) {
       if (!username || !address) return errorResponse('参数不完整', 400);
       const result = await unassignMailboxFromUser(db, { username, address });
       return Response.json(result);
-    } catch (e) { return errorResponse('取消分配失败: ' + (e?.message || e), 500); }
+    } catch (e) { return errorResponse('取消分配失败', 500); }
   }
   
   if (!isMock && request.method === 'GET' && path.startsWith('/api/users/') && path.endsWith('/mailboxes')) {

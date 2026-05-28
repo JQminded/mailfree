@@ -163,8 +163,10 @@ export async function handleEmailsApi(request, db, url, path, options) {
       if (!r2) return errorResponse('R2 未绑定', 500);
       const obj = await r2.get(row.r2_object_key);
       if (!obj) return errorResponse('对象不存在', 404);
+      const rawName = String(row.r2_object_key).split('/').pop() || 'email.eml';
+      const safeName = rawName.replace(/[^a-zA-Z0-9._-]/g, '_');
       const headers = new Headers({ 'Content-Type': 'message/rfc822' });
-      headers.set('Content-Disposition', `attachment; filename="${String(row.r2_object_key).split('/').pop()}"`);
+      headers.set('Content-Disposition', `attachment; filename="${safeName}"`);
       return new Response(obj.body, { headers });
     } catch (_) {
       return errorResponse('下载失败', 500);

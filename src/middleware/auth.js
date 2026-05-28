@@ -211,10 +211,11 @@ export async function verifyPassword(rawPassword, stored) {
       );
       const actualHash = new Uint8Array(bits);
       if (actualHash.length !== expectedHash.length) return { valid: false };
+      let diff = 0;
       for (let i = 0; i < actualHash.length; i++) {
-        if (actualHash[i] !== expectedHash[i]) return { valid: false };
+        diff |= actualHash[i] ^ expectedHash[i];
       }
-      return { valid: true };
+      return { valid: diff === 0 };
     } catch (_) {
       return { valid: false };
     }
