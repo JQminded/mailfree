@@ -286,7 +286,8 @@ export async function handleMailboxesApi(request, db, mailDomains, url, path, op
       // 搜索过滤（模糊匹配邮箱地址）
       if (searchParam && searchParam.trim()) {
         whereConditions.push('m.address LIKE ?');
-        bindParams.push(`%${searchParam.trim().toLowerCase()}%`);
+        const escaped = searchParam.trim().toLowerCase().replace(/[%_\\]/g, '\\$&');
+        bindParams.push(`%${escaped}%`);
       }
       
       if (domainParam) {

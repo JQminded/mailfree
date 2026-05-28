@@ -104,7 +104,7 @@ export async function handleSendApi(request, db, url, path, options) {
       await db.prepare('DELETE FROM sent_emails WHERE id = ?').bind(id).run();
       return Response.json({ success: true });
     } catch (e) {
-      return errorResponse('删除发件记录失败: ' + e.message, 500);
+      return errorResponse('删除发件记录失败', 500);
     }
   }
 
@@ -134,7 +134,7 @@ export async function handleSendApi(request, db, url, path, options) {
       });
       return Response.json({ success: true, id: result.id });
     } catch (e) {
-      return errorResponse('发送失败: ' + e.message, 500);
+      return errorResponse('发送失败', 500);
     }
   }
 
@@ -174,7 +174,7 @@ export async function handleSendApi(request, db, url, path, options) {
       } catch (_) { }
       return Response.json({ success: true, result });
     } catch (e) {
-      return errorResponse('批量发送失败: ' + e.message, 500);
+      return errorResponse('批量发送失败', 500);
     }
   }
 
@@ -190,7 +190,7 @@ export async function handleSendApi(request, db, url, path, options) {
       const data = await getEmailFromResend(RESEND_API_KEY, id);
       return Response.json(data);
     } catch (e) {
-      return errorResponse('查询失败: ' + e.message, 500);
+      return errorResponse('查询失败', 500);
     }
   }
 
@@ -214,7 +214,7 @@ export async function handleSendApi(request, db, url, path, options) {
       }
       return Response.json(data || { ok: true });
     } catch (e) {
-      return errorResponse('更新失败: ' + e.message, 500);
+      return errorResponse('更新失败', 500);
     }
   }
 
@@ -231,7 +231,7 @@ export async function handleSendApi(request, db, url, path, options) {
       await updateSentEmail(db, id, { status: 'canceled' });
       return Response.json(data);
     } catch (e) {
-      return errorResponse('取消失败: ' + e.message, 500);
+      return errorResponse('取消失败', 500);
     }
   }
 
